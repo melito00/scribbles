@@ -2,6 +2,7 @@ Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
 pushd c:\z\home\keyamada\
+(get-psprovider 'FileSystem').Home = $env:HOME
 
 Import-Module posh-git
 Start-SshAgent
@@ -16,3 +17,4 @@ function ll {
 # Set-Alias -Name "alias name" -Value "original command"
 # Remove-Item alias:....
 Set-Alias -Name "np" -Value "notepad++"
+Set-Alias -Name "vi" -Value "gvim"
