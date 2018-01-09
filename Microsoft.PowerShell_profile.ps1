@@ -8,6 +8,8 @@ Import-Module posh-git
 Start-SshAgent
 # ssh-add c:\z\home\keyamada\.ssh\id_ed25519
 
+Import-Module PSFzf -ArgumentList 'Ctrl+T','Ctrl+R'
+
 # Functions
 function ll {
   Get-ChildItem | Sort-Object
