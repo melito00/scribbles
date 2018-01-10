@@ -2,9 +2,13 @@ Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
 pushd c:\z\home\keyamada\
+
 (get-psprovider 'FileSystem').Home = $env:HOME
 
 Import-Module posh-git
+$GitPromptSettings.DefaultPromptSuffix = '`n$(''>'' * ($nestedPromptLevel + 1)) '
+$GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
+
 Start-SshAgent
 # ssh-add c:\z\home\keyamada\.ssh\id_ed25519
 
@@ -20,3 +24,4 @@ function ll {
 # Remove-Item alias:....
 Set-Alias -Name "np" -Value "notepad++"
 Set-Alias -Name "vi" -Value "gvim"
+Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
