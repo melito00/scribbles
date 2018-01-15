@@ -11,6 +11,7 @@ $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
 
 Start-SshAgent
 # ssh-add c:\z\home\keyamada\.ssh\id_ed25519
+Add-SshKey c:\z\home\keyamada\.ssh\id_ed25519
 
 Import-Module PSFzf -ArgumentList 'Ctrl+T','Ctrl+R'
 
