@@ -1,0 +1,27 @@
+name='nkf'
+
+pkgname="${name}"
+pkgver='2.1.4'
+pkgrel='1'
+pkgdesc="Network Kanji Filter"
+arch=('i686' 'x86_64')
+url="http://sourceforge.jp/projects/nkf/"
+license=('ZLIB')
+source=(http://dl.sourceforge.jp/nkf/64158/${pkgname}-${pkgver}.tar.gz)
+md5sums=(SKIP)
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make CC=gcc
+}
+
+check() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make test
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  mkdir -p "${pkgdir}/usr/bin"
+  cp nkf.exe "${pkgdir}/usr/bin/"
+}
