@@ -24,6 +24,14 @@ function g {
   git $args
 }
 
+function diff {
+  c:\z\msys64\usr\bin\diff $args
+}
+
+function vmrun {
+  C:\Program` Files` `(x86`)\VMware\VMware` Workstation\vmrun.exe $args
+}
+
 # Alias
 # Set-Alias -Name "alias name" -Value "original command"
 # Remove-Item alias:....
