@@ -32,6 +32,34 @@ function vmrun {
   C:\Program` Files` `(x86`)\VMware\VMware` Workstation\vmrun.exe $args
 }
 
+function Invoke-CommandRunAs
+{
+    $cd = (Get-Location).Path
+    $commands = "Set-Location $cd; Write-Host `"[Administrator] $cd> $args`"; $args; Pause; exit"
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($commands)
+    $encodedCommand = [Convert]::ToBase64String($bytes)
+    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoExit","-encodedCommand",$encodedCommand
+}
+
+Set-Alias sudo Invoke-CommandRunAs
+
+function Start-RunAs
+{
+    $cd = (Get-Location).Path
+    $commands = "Set-Location $cd; (Get-Host).UI.RawUI.WindowTitle += `" [Administrator]`""
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($commands)
+    $encodedCommand = [Convert]::ToBase64String($bytes)
+    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoExit","-encodedCommand",$encodedCommand
+}
+
+Set-Alias su Start-RunAs
+
+function gs {
+  C:\z\home\keyamada\go\bin\ghq list | Invoke-Fzf | % { Set-Location "${env:HOME}/.ghq/$_" }
+}
+
+# Set-PSReadlineKeyHandler -Chord Ctrl+T -Function gs
+
 # Alias
 # Set-Alias -Name "alias name" -Value "original command"
 # Remove-Item alias:....
