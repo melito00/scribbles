@@ -57,7 +57,6 @@ Set-Alias su Start-RunAs
 function gs {
   C:\z\home\keyamada\go\bin\ghq list | Invoke-Fzf | % { Set-Location "${env:HOME}/.ghq/$_" }
 }
-
 # Set-PSReadlineKeyHandler -Chord Ctrl+T -Function gs
 
 # Alias
@@ -66,3 +65,6 @@ function gs {
 Set-Alias -Name "np" -Value "notepad++"
 Set-Alias -Name "vi" -Value "gvim"
 Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
+
+$env:LESS='-gmrX'
+
