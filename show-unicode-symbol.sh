@@ -26,7 +26,7 @@ function unichr {
 }
 
 ## test harness
-#for (( i=0x2570; i<0x2600; i++ )); do
+#for (( i=0x2500; i<0x2600; i++ )); do
 for (( i=0x2580; i<0x2600; i++ )); do
     unichr $i
 done
