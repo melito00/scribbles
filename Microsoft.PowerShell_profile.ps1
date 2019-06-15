@@ -1,7 +1,7 @@
 Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
-pushd c:\z\home\kyamada\
+Push-Location c:\z\home\kyamada\
 
 (get-psprovider 'FileSystem').Home = $env:HOME
 
@@ -32,6 +32,22 @@ function vmrun {
   C:\Program` Files` `(x86`)\VMware\VMware` Workstation\vmrun.exe $args
 }
 
+# https://qiita.com/Kosen-amai/items/4b773c077a588f2a2fb5
+Add-Type -AssemblyName System.Windows.Forms
+
+<#
+.SYNOPSIS
+    コンピューターをサスペンド
+#>
+function Invoke-SleepComputer
+{
+    $state = [System.Windows.Forms.PowerState]::Suspend
+    [bool]$force = $true
+    [bool]$disableWakeEvent = $false
+
+    [System.Windows.Forms.Application]::SetSuspendState($state, $force, $disableWakeEvent)
+}
+
 function Invoke-CommandRunAs
 {
     $cd = (Get-Location).Path
@@ -55,7 +71,7 @@ function Start-RunAs
 Set-Alias su Start-RunAs
 
 function gs {
-  C:\z\home\keyamada\go\bin\ghq list | Invoke-Fzf | % { Set-Location "${env:HOME}/.ghq/$_" }
+  C:\z\home\keyamada\go\bin\ghq list | Invoke-Fzf | ForEach-Object { Set-Location "${env:HOME}/.ghq/$_" }
 }
 # Set-PSReadlineKeyHandler -Chord Ctrl+T -Function gs
 
