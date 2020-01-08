@@ -1,9 +1,10 @@
 Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
-Push-Location c:\z\home\kyamada\
-
+pushd c:\z\home\kyamada\
 (get-psprovider 'FileSystem').Home = $env:HOME
+
+set-item env:GIT_SSH -value C:\windows\System32\OpenSSH\ssh.exe
 
 Import-Module posh-git
 $GitPromptSettings.DefaultPromptSuffix = '`n$(''>'' * ($nestedPromptLevel + 1)) '
@@ -24,28 +25,16 @@ function g {
   git $args
 }
 
+function code {
+  C:\Users\kyamada\work\VSCode-win32-x64-1.42.0-insider\Code` -` Insiders.exe $args
+}
+
 function diff {
   c:\z\msys64\usr\bin\diff $args
 }
 
 function vmrun {
   C:\Program` Files` `(x86`)\VMware\VMware` Workstation\vmrun.exe $args
-}
-
-# https://qiita.com/Kosen-amai/items/4b773c077a588f2a2fb5
-Add-Type -AssemblyName System.Windows.Forms
-
-<#
-.SYNOPSIS
-    コンピューターをサスペンド
-#>
-function Invoke-SleepComputer
-{
-    $state = [System.Windows.Forms.PowerState]::Suspend
-    [bool]$force = $true
-    [bool]$disableWakeEvent = $false
-
-    [System.Windows.Forms.Application]::SetSuspendState($state, $force, $disableWakeEvent)
 }
 
 function Invoke-CommandRunAs
@@ -71,7 +60,7 @@ function Start-RunAs
 Set-Alias su Start-RunAs
 
 function gs {
-  C:\z\home\keyamada\go\bin\ghq list | Invoke-Fzf | ForEach-Object { Set-Location "${env:HOME}/.ghq/$_" }
+  C:\z\home\keyamada\go\bin\ghq list | Invoke-Fzf | % { Set-Location "${env:HOME}/.ghq/$_" }
 }
 # Set-PSReadlineKeyHandler -Chord Ctrl+T -Function gs
 
@@ -82,5 +71,11 @@ Set-Alias -Name "np" -Value "notepad++"
 Set-Alias -Name "vi" -Value "gvim"
 Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
 
-$env:LESS='-gmrX'
+# Chocolatey profile
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
+
+Set-Item env:LANG -Value ja_JP.UTF-8
 
