@@ -72,6 +72,7 @@ Set-Alias -Name "np" -Value "notepad++"
 Set-Alias -Name "vi" -Value "gvim"
 # Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
 Remove-Item alias:curl
+Set-Alias -Name "curl" -Value "$(scoop prefix curl)\bin\curl.exe"
 
 # Chocolatey profile
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
