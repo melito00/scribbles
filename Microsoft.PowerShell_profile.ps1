@@ -70,7 +70,8 @@ function gs {
 # Remove-Item alias:....
 Set-Alias -Name "np" -Value "notepad++"
 Set-Alias -Name "vi" -Value "gvim"
-Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
+# Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
+Remove-Item alias:curl
 
 # Chocolatey profile
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
