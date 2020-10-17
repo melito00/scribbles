@@ -1,6 +1,7 @@
 Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
+$HomeDir = "C:\z\home\kyamada\"
 pushd c:\z\home\kyamada\
 (get-psprovider 'FileSystem').Home = $env:HOME
 
