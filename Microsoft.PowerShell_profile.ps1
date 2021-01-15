@@ -2,8 +2,12 @@ Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
 $HomeDir = "C:\z\home\kyamada\"
+Set-Item env:HOME $HomeDir
+(get-psprovider 'FileSystem').Home = $HomeDir
 pushd c:\z\home\kyamada\
-(get-psprovider 'FileSystem').Home = $env:HOME
+
+# Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\powerlevel10k_classic.omp.json)
+Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\negligible.omp.json)
 
 set-item env:GIT_SSH -value C:\windows\System32\OpenSSH\ssh.exe
 
@@ -47,7 +51,7 @@ function Invoke-CommandRunAs
     Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoExit","-encodedCommand",$encodedCommand
 }
 
-Set-Alias sudo Invoke-CommandRunAs
+# Set-Alias sudo Invoke-CommandRunAs
 
 function Start-RunAs
 {
@@ -71,8 +75,8 @@ function gs {
 Set-Alias -Name "np" -Value "notepad++"
 Set-Alias -Name "vi" -Value "gvim"
 # Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
-Remove-Item alias:curl
-Set-Alias -Name "curl" -Value "$(scoop prefix curl)\bin\curl.exe"
+# Remove-Item alias:curl
+Set-Alias -Name "curlcmd" -Value "$(scoop prefix curl)\bin\curl.exe"
 
 # Chocolatey profile
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
@@ -81,4 +85,3 @@ if (Test-Path($ChocolateyProfile)) {
 }
 
 Set-Item env:LANG -Value ja_JP.UTF-8
-
