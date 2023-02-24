@@ -1,3 +1,6 @@
+# Copyright (C) 1997-2023 by Kenji Yamada
+
+# Install-Module PSReadLine
 Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
@@ -6,11 +9,13 @@ Set-Item env:HOME $HomeDir
 (get-psprovider 'FileSystem').Home = $HomeDir
 pushd c:\z\home\kyamada\
 
+# scoop install oh-my-posh
 # Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\powerlevel10k_classic.omp.json)
 Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\negligible.omp.json)
 
 set-item env:GIT_SSH -value C:\windows\System32\OpenSSH\ssh.exe
 
+# Install-Module -Scope CurrentUser posh-git
 Import-Module posh-git
 $GitPromptSettings.DefaultPromptSuffix = '`n$(''>'' * ($nestedPromptLevel + 1)) '
 $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
@@ -19,7 +24,11 @@ Start-SshAgent
 # ssh-add c:\z\home\keyamada\.ssh\id_ed25519
 # Add-SshKey c:\z\home\keyamada\.ssh\id_ed25519
 
-Import-Module PSFzf -ArgumentList 'Ctrl+T','Ctrl+R'
+# Install-Module -Scope CurrentUser PSFzf
+# scoop install fzf
+# Import-Module PSFzf -ArgumentList 'Ctrl+T','Ctrl+R'
+Import-Module PSFzf
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 # Functions
 function ll {
@@ -79,6 +88,7 @@ Set-Alias -Name "vi" -Value "gvim"
 Set-Alias -Name "curlcmd" -Value "$(scoop prefix curl)\bin\curl.exe"
 
 # For uutils coreutils
+# scoop install uutils-coreutils
 @"
   arch, base32, base64, basename, cat, cksum, comm, cp, cut, date, df, dircolors, dirname,
   echo, env, expand, expr, factor, false, fmt, fold, hashsum, head, hostname, join, link, ln,
