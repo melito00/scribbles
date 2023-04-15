@@ -5,9 +5,11 @@ Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
 $HomeDir = "C:\z\home\kyamada\"
-Set-Item env:HOME $HomeDir
+Set-Item env:HOME -Value $HomeDir
 (get-psprovider 'FileSystem').Home = $HomeDir
 pushd c:\z\home\kyamada\
+
+Set-Item env:XDG_CONFIG_HOME -Value "${HomeDir}config"
 
 # scoop install oh-my-posh
 # Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\powerlevel10k_classic.omp.json)
@@ -17,6 +19,7 @@ set-item env:GIT_SSH -value C:\windows\System32\OpenSSH\ssh.exe
 
 # Install-Module -Scope CurrentUser posh-git
 Import-Module posh-git
+Import-Module posh-sshell
 $GitPromptSettings.DefaultPromptSuffix = '`n$(''>'' * ($nestedPromptLevel + 1)) '
 $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
 
@@ -31,24 +34,18 @@ Import-Module PSFzf
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 # Functions
+if (Get-Command "bat.exe" -ErrorAction SilentlyContinue) {
+	function cat {
+		bat.exe $args
+	}
+}
+
 function ll {
   Get-ChildItem | Sort-Object
 }
 
 function g {
   git $args
-}
-
-function code {
-  C:\Users\kyamada\work\VSCode-win32-x64-1.42.0-insider\Code` -` Insiders.exe $args
-}
-
-function diff {
-  c:\z\msys64\usr\bin\diff $args
-}
-
-function vmrun {
-  C:\Program` Files` `(x86`)\VMware\VMware` Workstation\vmrun.exe $args
 }
 
 function Invoke-CommandRunAs
@@ -73,10 +70,12 @@ function Start-RunAs
 
 Set-Alias su Start-RunAs
 
-function gs {
-  C:\z\home\keyamada\go\bin\ghq list | Invoke-Fzf | % { Set-Location "${env:HOME}/.ghq/$_" }
+if (Get-Command "ghq.exe" -ErrorAction SilentlyContinue) {
+  function gq {
+    ghq.exe list | Invoke-Fzf | % { Set-Location "$(ghq root)/$_" }
+  }
 }
-# Set-PSReadlineKeyHandler -Chord Ctrl+T -Function gs
+# Set-PSReadlineKeyHandler -Chord Ctrl+x,Ctrl+f -ScriptBlock { ghq.exe list | Invoke-Fzf | % { Set-Location "$(ghq root)/$_" } }
 
 # Alias
 # Set-Alias -Name "alias name" -Value "original command"
@@ -116,6 +115,6 @@ if (Test-Path($ChocolateyProfile)) {
 Set-Item env:LANG -Value ja_JP.UTF-8
 Set-Item env:VAGRANT_DEFAULT_PROVIDER -Value hyperv
 
-if (Get-Command fnm.exe -ErrorAction SilentlyContinue) {
+if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
   fnm env --use-on-cd | Out-String | Invoke-Expression
 }
