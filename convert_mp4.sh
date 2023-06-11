@@ -12,7 +12,7 @@ opt2='-c:a copy -c:v libx265'
 for f in "$@"; do
 	ffprobe_result=`$ffprobe_cmd -i "$f"`
 	codec=`echo $ffprobe_result | cut -d ',' -f 2`
-	width=`echo $ffprobe_result | cut -d ',' -f 4`
+	width=`echo $ffprobe_result | cut -d ',' -f 3`
 	height=`echo $ffprobe_result | cut -d ',' -f 4`
 	if [ x"$codec" = "xh264" ]; then
 		echo 'Need to convert'
