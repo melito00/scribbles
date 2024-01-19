@@ -4,10 +4,10 @@
 Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
-$HomeDir = "C:\z\home\kyamada\"
+$HomeDir = "C:\Users\kyamada\"
 Set-Item env:HOME -Value $HomeDir
-(get-psprovider 'FileSystem').Home = $HomeDir
-pushd c:\z\home\kyamada\
+# (get-psprovider 'FileSystem').Home = $HomeDir
+# pushd c:\z\home\kyamada\
 
 Set-Item env:XDG_CONFIG_HOME -Value "${HomeDir}config"
 
@@ -15,7 +15,7 @@ Set-Item env:XDG_CONFIG_HOME -Value "${HomeDir}config"
 # Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\powerlevel10k_classic.omp.json)
 Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\negligible.omp.json)
 
-set-item env:GIT_SSH -value C:\windows\System32\OpenSSH\ssh.exe
+Set-Item env:GIT_SSH -Value C:\windows\System32\OpenSSH\ssh.exe
 
 # Install-Module -Scope CurrentUser posh-git
 Import-Module posh-git
@@ -40,51 +40,46 @@ if (Get-Command "bat.exe" -ErrorAction SilentlyContinue) {
 	}
 }
 
-function ll {
-  Get-ChildItem | Sort-Object
+if (Get-Command "eza.exe" -ErrorAction SilentlyContinue) {
+	function ls {
+		eza.exe -F $args
+	}
 }
-
-function g {
-  git $args
-}
-
-function Invoke-CommandRunAs
-{
-    $cd = (Get-Location).Path
-    $commands = "Set-Location $cd; Write-Host `"[Administrator] $cd> $args`"; $args; Pause; exit"
-    $bytes = [System.Text.Encoding]::Unicode.GetBytes($commands)
-    $encodedCommand = [Convert]::ToBase64String($bytes)
-    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoExit","-encodedCommand",$encodedCommand
-}
-
-# Set-Alias sudo Invoke-CommandRunAs
-
-function Start-RunAs
-{
-    $cd = (Get-Location).Path
-    $commands = "Set-Location $cd; (Get-Host).UI.RawUI.WindowTitle += `" [Administrator]`""
-    $bytes = [System.Text.Encoding]::Unicode.GetBytes($commands)
-    $encodedCommand = [Convert]::ToBase64String($bytes)
-    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoExit","-encodedCommand",$encodedCommand
-}
-
-Set-Alias su Start-RunAs
 
 if (Get-Command "ghq.exe" -ErrorAction SilentlyContinue) {
   function gq {
     ghq.exe list | Invoke-Fzf | % { Set-Location "$(ghq root)/$_" }
   }
 }
+
+if (Get-Command "goneovim.exe" -ErrorAction SilentlyContinue) {
+  function vi {
+    param (
+      [string[]]$Arguments
+    )
+
+    if ($Arguments.Length -eq 0) {
+      Start-Process -FilePath "goneovim.exe" -WindowStyle Hidden
+    } else {
+      Start-Process -FilePath "goneovim.exe" -ArgumentList $Arguments -WindowStyle Hidden
+    }
+  }
+}
+
+function code {
+    Start-Process "C:\Users\kyamada\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" -ArgumentList $args
+}
+
 # Set-PSReadlineKeyHandler -Chord Ctrl+x,Ctrl+f -ScriptBlock { ghq.exe list | Invoke-Fzf | % { Set-Location "$(ghq root)/$_" } }
 
 # Alias
 # Set-Alias -Name "alias name" -Value "original command"
 # Remove-Item alias:....
-Set-Alias -Name "np" -Value "notepad++"
-Set-Alias -Name "vi" -Value "gvim"
+Set-Alias -Name "np" -Value "C:\Program Files\Notepad++\notepad++.exe"
+#Set-Alias -Name "vi" -Value "gvim"
 # Set-Alias -Name "7z" -Value "C:\Program Files\7-Zip\7z.exe"
 # Remove-Item alias:curl
-Set-Alias -Name "curlcmd" -Value "$(scoop prefix curl)\bin\curl.exe"
+# Set-Alias -Name "curlcmd" -Value "$(scoop prefix curl)\bin\curl.exe"
 
 # For uutils coreutils
 # scoop install uutils-coreutils
@@ -104,12 +99,6 @@ ForEach-Object {
     if (Test-Path Alias:$cmd) { Remove-Item -Path Alias:$cmd }
     $fn = '$input | uutils ' + $cmd + ' $args'
     Invoke-Expression "function global:$cmd { $fn }" 
-}
-
-# Chocolatey profile
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-  Import-Module "$ChocolateyProfile"
 }
 
 Set-Item env:LANG -Value ja_JP.UTF-8
