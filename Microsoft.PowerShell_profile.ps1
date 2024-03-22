@@ -72,6 +72,9 @@ function code {
 
 # Set-PSReadlineKeyHandler -Chord Ctrl+x,Ctrl+f -ScriptBlock { ghq.exe list | Invoke-Fzf | % { Set-Location "$(ghq root)/$_" } }
 
+# Set Envrionment Variables
+Set-Item env:BAT_PAGER -Value 'less.exe -rX'
+
 # Alias
 # Set-Alias -Name "alias name" -Value "original command"
 # Remove-Item alias:....
