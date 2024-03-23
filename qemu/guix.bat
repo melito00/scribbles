@@ -2,7 +2,7 @@
    -accel whpx ^
    -nic user,model=virtio-net-pci ^
    -m 4096 ^
-   -vga virtio ^
+   -device VGA,edid=on,xres=1680,yres=1200 ^
    -device nec-usb-xhci,id=usb,bus=pci.0,addr=0x4 ^
    -device usb-tablet ^
    -device virtio-blk,drive=myhd ^
