@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 
 function download_gh_release() {
