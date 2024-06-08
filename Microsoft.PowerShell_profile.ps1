@@ -108,5 +108,5 @@ Set-Item env:LANG -Value ja_JP.UTF-8
 Set-Item env:VAGRANT_DEFAULT_PROVIDER -Value hyperv
 
 if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
-  fnm env --use-on-cd | Out-String | Invoke-Expression
+  fnm env --shell power-shell --use-on-cd | Out-String | Invoke-Expression
 }
