@@ -4,12 +4,17 @@
 Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
-$HomeDir = "C:\Users\kyamada\"
+$HomeDir = 'C:\Users\kyamada'
 Set-Item env:HOME -Value $HomeDir
 # (get-psprovider 'FileSystem').Home = $HomeDir
 # pushd c:\z\home\kyamada\
 
-Set-Item env:XDG_CONFIG_HOME -Value "${HomeDir}config"
+Set-Item env:XDG_CONFIG_HOME -Value "${HomeDir}\\config"
+
+# https://github.com/PowerShell/CompletionPredictor
+# Install-Module -Name CompletionPredictor -Repository PSGallery
+Import-Module -Name CompletionPredictor
+Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 
 # scoop install oh-my-posh
 # Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\powerlevel10k_classic.omp.json)
@@ -67,7 +72,19 @@ if (Get-Command "goneovim.exe" -ErrorAction SilentlyContinue) {
 }
 
 function code {
-    Start-Process "C:\Users\kyamada\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" -ArgumentList $args
+    Start-Process "C:\Users\kyamada\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" -ArgumentList $args -WindowStyle Hidden
+}
+
+function bg {
+  param(
+    [Parameter(Mandatory = $true, ValueFromRemainingArguments = $true)]
+    [string[]] $Command
+  )
+
+  $Executable = $Command[0]
+  $Arguments = $Command[1..$Command.Length]
+
+  Start-Process -FilePath $Executable -ArgumentList $Arguments -PassThru -WindowStyle Hidden | Out-Null
 }
 
 # Set-PSReadlineKeyHandler -Chord Ctrl+x,Ctrl+f -ScriptBlock { ghq.exe list | Invoke-Fzf | % { Set-Location "$(ghq root)/$_" } }
@@ -104,7 +121,17 @@ ForEach-Object {
     Invoke-Expression "function global:$cmd { $fn }" 
 }
 
+if (Get-Command "nvim.exe" -ErrorAction SilentlyContinue) {
+  Set-Item env:EDITOR -Value nvim.exe
+}
+
+if (Get-Command "bat.exe" -ErrorAction SilentlyContinue) {
+  Set-Item env:PAGER -Value bat.exe
+}
+
 Set-Item env:LANG -Value ja_JP.UTF-8
+Set-Item env:LESS -Value "-XR"
+Set-Item env:LESSCHARSET -Value "utf-8"
 Set-Item env:VAGRANT_DEFAULT_PROVIDER -Value hyperv
 
 if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
