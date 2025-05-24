@@ -7,7 +7,8 @@
 ffprobe_cmd='ffprobe -v error -hide_banner -select_streams v:0 -show_entries stream=codec_name,duration,width,height -show_entries stream_tags=title,duration -of csv'
 ffmpeg_cmd='ffmpeg -hide_banner'
 opt1='-vf scale=960:-1'
-opt2='-c:a copy -c:v libx265'
+#opt2='-c:a copy -c:v libx265'
+opt2='-threads 4 -c:a copy -c:v libx265 -preset veryfast'
 
 for f in "$@"; do
 	ffprobe_result=`$ffprobe_cmd -i "$f"`
@@ -35,3 +36,6 @@ for f in "$@"; do
 	fi
 	echo $f,$ffprobe_result
 done
+#echo "convert finish :: $(date +'%Y-%m-%d %H:%M:%S')" | $HOME/bin/notify-slack.sh
+#echo $HOME/bin/notify-slack.sh -m "convert finish :: $(date +'%Y-%m-%d %H:%M:%S')"
+$HOME/bin/notify-slack-bot.sh -h "*MP4 CONV* :tada: " -m "finish :: $(date +'%Y-%m-%d %H:%M:%S')"
