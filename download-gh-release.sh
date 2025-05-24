@@ -18,4 +18,5 @@ while IFS=',' read -r key value; do
 done <<EOF
 yuru7/HackGen,HackGen_NF
 yuru7/moralerspace,MoralerspaceNF
+avih/uclip,uclip.version
 EOF
