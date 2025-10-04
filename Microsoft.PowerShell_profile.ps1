@@ -4,12 +4,11 @@
 Import-Module PSReadLine
 Set-PSReadlineOption -EditMode Emacs -BellStyle None
 
-$HomeDir = 'C:\Users\kyamada'
+$HomeDir = "C:\Users\kyamada\"
 Set-Item env:HOME -Value $HomeDir
-# (get-psprovider 'FileSystem').Home = $HomeDir
-# pushd c:\z\home\kyamada\
+(Get-psprovider 'FileSystem').Home = 'C:\\Users\\kyamada'
 
-Set-Item env:XDG_CONFIG_HOME -Value "${HomeDir}\\config"
+Set-Item env:XDG_CONFIG_HOME -Value "${HomeDir}config"
 
 # https://github.com/PowerShell/CompletionPredictor
 # Install-Module -Name CompletionPredictor -Repository PSGallery
@@ -18,17 +17,19 @@ Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 
 # scoop install oh-my-posh
 # Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\powerlevel10k_classic.omp.json)
-Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\negligible.omp.json)
+#Invoke-Expression (oh-my-posh --init --shell pwsh --config C:\Users\kyamada\scoop\apps\oh-my-posh\current\themes\negligible.omp.json)
+Set-Item env:STARSHIP_CONFIG -Value "${HomeDir}config\starship\plain.toml"
+Invoke-Expression (&starship init powershell)
 
 Set-Item env:GIT_SSH -Value C:\windows\System32\OpenSSH\ssh.exe
 
 # Install-Module -Scope CurrentUser posh-git
-Import-Module posh-git
-Import-Module posh-sshell
-$GitPromptSettings.DefaultPromptSuffix = '`n$(''>'' * ($nestedPromptLevel + 1)) '
-$GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
+#Import-Module posh-git
+#Import-Module posh-sshell
+#$GitPromptSettings.DefaultPromptSuffix = '`n$(''>'' * ($nestedPromptLevel + 1)) '
+#$GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
 
-Start-SshAgent
+#Start-SshAgent
 # ssh-add c:\z\home\keyamada\.ssh\id_ed25519
 # Add-SshKey c:\z\home\keyamada\.ssh\id_ed25519
 
@@ -89,9 +90,6 @@ function bg {
 
 # Set-PSReadlineKeyHandler -Chord Ctrl+x,Ctrl+f -ScriptBlock { ghq.exe list | Invoke-Fzf | % { Set-Location "$(ghq root)/$_" } }
 
-# Set Envrionment Variables
-Set-Item env:BAT_PAGER -Value 'less.exe -rX'
-
 # Alias
 # Set-Alias -Name "alias name" -Value "original command"
 # Remove-Item alias:....
@@ -135,5 +133,5 @@ Set-Item env:LESSCHARSET -Value "utf-8"
 Set-Item env:VAGRANT_DEFAULT_PROVIDER -Value hyperv
 
 if (Get-Command "fnm.exe" -ErrorAction SilentlyContinue) {
-  fnm env --shell power-shell --use-on-cd | Out-String | Invoke-Expression
+  fnm env --use-on-cd | Out-String | Invoke-Expression
 }
